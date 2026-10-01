@@ -95,10 +95,9 @@
   }
   .btn-navy:hover{background:var(--navy-900);transform:translateY(-2px);}
 
-  /* ---------- PARALLAX BACKGROUND (Efeito aplicado nas áreas azuis) ---------- */
+  /* ---------- PARALLAX BACKGROUND ---------- */
   .parallax-bg {
     background-color: var(--navy-900);
-    /* CAMINHO DA SUA LOGO DE FUNDO ABAIXO */
     background-image: url('Imagens/Logo.jpeg'); 
     background-size: 500px;
     background-position: center;
@@ -111,12 +110,12 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(10, 31, 58, 0.90); /* Escurecimento azul marinho */
+    background: rgba(10, 31, 58, 0.90);
     z-index: 1;
   }
   .parallax-bg > .container {
     position: relative;
-    z-index: 3; /* Garante que o conteúdo fique por cima do fundo */
+    z-index: 3;
   }
 
   /* ---------- HEADER ---------- */
@@ -302,6 +301,8 @@
     grid-auto-rows:minmax(150px,auto);
     gap:20px;
   }
+  
+  /* EFEITO DE HOVER FOTO NAS ESPECIALIDADES */
   .servico-card{
     background:var(--paper);
     border-radius:var(--radius-md);
@@ -311,16 +312,74 @@
     justify-content:space-between;
     transition:transform .3s ease, box-shadow .3s ease;
     border:1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
   }
-  .servico-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(10,31,58,0.1);}
+  .servico-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(10,31,58,0.1);
+  }
+  
+  .servico-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: -2;
+    transform: scale(1.08);
+  }
+  .servico-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 31, 58, 0.88); /* Azul marinho para legibilidade do texto */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+  }
+  
+  .servico-card:hover .servico-bg,
+  .servico-card:active .servico-bg {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .servico-card:hover .servico-overlay,
+  .servico-card:active .servico-overlay {
+    opacity: 1;
+  }
+  
+  /* Garantir que o texto mude para branco ao passar o mouse */
+  .servico-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+  }
+  .servico-content h3, .servico-content p {
+    transition: color 0.4s ease;
+  }
+  .servico-card:hover .servico-content h3,
+  .servico-card:active .servico-content h3 {
+    color: var(--white);
+  }
+  .servico-card:hover .servico-content p,
+  .servico-card:active .servico-content p {
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* Especialidade principal (Cor diferente) */
   .servico-featured{
     grid-column:span 2;
     grid-row:span 2;
     background:var(--navy-800);
     color:var(--white);
     border:none;
-    position:relative;
-    overflow:hidden;
+  }
+  .servico-featured h3, .servico-featured p {
+    color: var(--white);
   }
   .servico-featured::after{
     content:'';
@@ -329,6 +388,7 @@
     width:220px;height:220px;
     border-radius:50%;
     border:1px solid rgba(239,168,196,0.35);
+    z-index: -1;
   }
   .servico-featured .tag{
     position:absolute;top:26px;right:26px;
@@ -340,6 +400,7 @@
     text-transform:uppercase;
     padding:6px 12px;
     border-radius:100px;
+    z-index: 3;
   }
   .servico-card h3{
     font-size:20px;
@@ -370,7 +431,6 @@
     overflow:hidden;
   }
   .dif-item{
-    /* Fundo semitransparente para a logo aparecer por baixo do cartão */
     background:rgba(10, 31, 58, 0.75); 
     backdrop-filter: blur(8px);
     padding:36px 30px;
@@ -461,35 +521,68 @@
     border: none;
   }
 
-  /* ---------- DEPOIMENTOS ---------- */
+  /* ---------- DEPOIMENTOS (SLIDER) ---------- */
   .depoimentos{padding:110px 0;background:var(--paper);}
-  .dep-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:24px;
+  .dep-container-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+  .dep-slider {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 40px;
   }
-  .dep-card{
-    background:var(--white);
-    border-radius:var(--radius-md);
-    padding:32px;
-    border:1px solid var(--line);
-    display:flex;
-    flex-direction:column;
-    gap:20px;
+  .dep-card {
+    grid-row: 1;
+    grid-column: 1;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    box-shadow: 0 15px 35px rgba(10,31,58,0.05);
   }
-  .stars{color:var(--pink-deep);font-size:15px;letter-spacing:2px;}
-  .dep-card p.quote{font-size:15px;color:var(--ink);line-height:1.65;}
-  .dep-who{display:flex;align-items:center;gap:12px;margin-top:auto;}
-  .dep-avatar{
-    width:38px;height:38px;border-radius:50%;
-    background:var(--navy-700);
-    color:var(--white);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces',serif;font-size:14px;
-    flex-shrink:0;
+  .dep-card.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
   }
-  .dep-who strong{display:block;font-size:13.5px;color:var(--navy-900);}
-  .dep-who span{font-size:12px;color:var(--ink-soft);}
+  .stars { color: var(--pink-deep); font-size: 18px; letter-spacing: 3px; }
+  .dep-card p.quote { font-size: 16px; color: var(--ink); line-height: 1.65; font-style: italic; }
+  .dep-who { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .dep-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy-700);
+    color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .dep-who div { text-align: left; }
+  .dep-who strong { display: block; font-size: 14.5px; color: var(--navy-900); }
+  .dep-who span { font-size: 12.5px; color: var(--ink-soft); }
+  
+  .slider-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+  }
+  .slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--line);
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .slider-dot.active {
+    background-color: var(--pink-deep);
+  }
 
   /* ---------- CTA FINAL ---------- */
   .cta-final{
@@ -571,6 +664,7 @@
     .espaco-grid{grid-template-columns:1fr;}
     .footer-grid{grid-template-columns:1fr;}
     .processo-head{flex-direction:column;align-items:flex-start;}
+    .dep-card { padding: 30px 20px; }
   }
 </style>
 </head>
@@ -614,7 +708,6 @@
   <div class="container sobre-grid">
     <div class="reveal">
       <div class="sobre-portrait">
-        <!-- Substitua o link abaixo pela foto da Dra. Solange -->
         <img src="Imagens/Foto_dra.jpeg" alt="Foto da Dra. Solange Cabral">
         <div class="sobre-tag">CRO 144730 · Especialista em Implantodontia<span>Atendimento humanizado desde a primeira consulta</span></div>
       </div>
@@ -653,45 +746,99 @@
       <h2>Uma odontologia completa, com foco em implantes.</h2>
     </div>
     <div class="servicos-grid">
+      
+      <!-- Especialidade Principal -->
       <div class="servico-card servico-featured reveal">
+        <!-- Cole a foto correspondente no url abaixo -->
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/implante.jpeg');"></div>
+        <div class="servico-overlay"></div>
         <span class="tag">Especialidade principal</span>
-        <div>
+        <div class="servico-content">
           <h3>Implantes dentários</h3>
           <p>Reabilitação de um ou mais dentes com implantes de titânio, do planejamento 3D à instalação da prótese definitiva.</p>
         </div>
       </div>
+
+      <!-- Clínica geral -->
       <div class="servico-card reveal">
-        <h3>Clínica geral</h3>
-        <p>Check-ups, restaurações, limpeza e prevenção para manter a saúde bucal em dia.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/clinico_geral.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Clínica geral</h3>
+          <p>Check-ups, restaurações, limpeza e prevenção para manter a saúde bucal em dia.</p>
+        </div>
       </div>
+
+      <!-- Prótese protocolo (NOVO) -->
       <div class="servico-card reveal">
-        <h3>Ortodontia</h3>
-        <p>Alinhamento dentário com aparelhos modernos para um sorriso estético e funcional.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/prot_protoc.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Prótese protocolo</h3>
+          <p>Prótese fixa suportada por implantes que substitui todos os dentes com estética e mastigação idênticas às naturais.</p>
+        </div>
       </div>
+
+      <!-- Prótese total e removível (NOVO) -->
       <div class="servico-card reveal">
-        <h3>Tratamento de Canal</h3>
-        <p>Endodontia especializada para salvar seu dente e eliminar a dor com segurança.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/prot_total.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Prótese total e removível</h3>
+          <p>Opções estéticas e confortáveis para devolver o sorriso e a função mastigatória de forma prática.</p>
+        </div>
       </div>
+
+      <!-- Ortodontia -->
       <div class="servico-card reveal">
-        <h3>Remoção de sisos</h3>
-        <p>Avaliação e extração de terceiros molares, inclusos ou não, com protocolo de recuperação tranquilo.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/ortodontia.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Ortodontia</h3>
+          <p>Alinhamento dentário com aparelhos modernos para um sorriso estético e funcional.</p>
+        </div>
       </div>
+
+      <!-- Tratamento de Canal -->
       <div class="servico-card reveal">
-        <h3>Cirurgias de extração</h3>
-        <p>Extrações simples e complexas realizadas com técnica cuidadosa e controle da dor.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/canal.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Tratamento de Canal</h3>
+          <p>Endodontia especializada para salvar seu dente e eliminar a dor com segurança.</p>
+        </div>
       </div>
+
+      <!-- Remoção de sisos -->
       <div class="servico-card reveal">
-        <h3>Prótese sobre implante</h3>
-        <p>Coroas, próteses parciais e protocolos fixos para devolver função e estética ao sorriso.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/siso.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Remoção de sisos</h3>
+          <p>Avaliação e extração de terceiros molares, inclusos ou não, com protocolo de recuperação tranquilo.</p>
+        </div>
       </div>
+
+      <!-- Prótese sobre implante -->
       <div class="servico-card reveal">
-        <h3>Enxerto ósseo</h3>
-        <p>Preparo do osso maxilar quando necessário, garantindo base segura para o implante.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/prot_implante.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Prótese sobre implante</h3>
+          <p>Coroas, próteses parciais e protocolos fixos para devolver função e estética ao sorriso.</p>
+        </div>
       </div>
+
+      <!-- Estética dental -->
       <div class="servico-card reveal">
-        <h3>Estética dental</h3>
-        <p>Clareamento e ajustes estéticos para um sorriso mais harmônico no dia a dia.</p>
+        <div class="servico-bg" style="background-image: url('Imagens/especialidades/clareamento.jpeg');"></div>
+        <div class="servico-overlay"></div>
+        <div class="servico-content">
+          <h3>Estética dental</h3>
+          <p>Clareamento e ajustes estéticos para um sorriso mais harmônico no dia a dia.</p>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -785,6 +932,9 @@
         <img src="Imagens/Foto_recep1.jpeg" alt="Recepção do Consultório">
       </div>
       <div class="espaco-img reveal">
+        <img src="Imagens/Foto_recep2.jpeg" alt="Recepção do Consultório">
+      </div>
+      <div class="espaco-img reveal">
         <img src="Imagens/Foto_sala.jpeg" alt="Sala de Atendimento">
       </div>
       <div class="espaco-img reveal">
@@ -806,36 +956,124 @@
 </section>
 
 <section class="depoimentos" id="depoimentos">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">Depoimentos</span>
-      <h2>O que dizem as pacientes e pacientes atendidos.</h2>
+  <div class="container dep-container-inner">
+    <div class="section-head reveal" style="margin: 0 auto;">
+      <span class="eyebrow">Depoimentos Google</span>
+      <h2>O que dizem os nossos pacientes.</h2>
     </div>
-    <div class="dep-grid">
-      <div class="dep-card reveal">
+    
+    <!-- CARROSSEL DE DEPOIMENTOS -->
+    <div class="dep-slider reveal">
+      
+      <!-- Depoimento 1 -->
+      <div class="dep-card active">
         <span class="stars">★★★★★</span>
-        <p class="quote">Fiz dois implantes e todo o processo foi explicado com calma. Não senti dor nem no dia da cirurgia nem depois.</p>
+        <p class="quote">"Ótima experiência, mesmo sendo uma situação, às vezes, um pouco temida, que é a ida ao dentista. Atendimento bem esclarecedor por parte da Dra. Laise, e a Dra. Solange me pareceu bem simpática. Ambiente agradável."</p>
         <div class="dep-who">
           <div class="dep-avatar">M</div>
-          <div><strong>Mariana T.</strong><span>Tratamento de implante</span></div>
+          <div><strong>Helton Araújo</strong><span>Tratamento de Canal</span></div>
         </div>
       </div>
-      <div class="dep-card reveal">
+      
+      <!-- Depoimento 2 -->
+      <div class="dep-card">
         <span class="stars">★★★★★</span>
-        <p class="quote">Removi os quatro sisos com a Dra. Solange. Recuperação tranquila e um acompanhamento de perto nos dias seguintes.</p>
+        <p class="quote">"Desde de a recepção até a dr Solange<br>Um atendimento nota mil. <br>Recomendo muito atendimento humanizado com todo respeito e dedicação."</p>
         <div class="dep-who">
           <div class="dep-avatar">R</div>
-          <div><strong>Rafael A.</strong><span>Remoção de sisos</span></div>
+          <div><strong>Gislaine Alves</strong><span>Restauração</span></div>
         </div>
       </div>
-      <div class="dep-card reveal">
+      
+      <!-- Depoimento 3 -->
+      <div class="dep-card">
         <span class="stars">★★★★★</span>
-        <p class="quote">Comecei indo para uma limpeza de rotina e hoje faço todo o acompanhamento odontológico da família por aqui.</p>
+        <p class="quote">"Maravilhoso o atendimento do começo ao final, recepcionista atenciosa, dra calma atende com paciência, tira todas as dúvidas, meu filho de 7 anos passa com ela e ele ama."</p>
         <div class="dep-who">
           <div class="dep-avatar">C</div>
-          <div><strong>Camila S.</strong><span>Clínica geral</span></div>
+          <div><strong>Nath Santos</strong><span>Clínica geral</span></div>
         </div>
       </div>
+
+      <!-- Depoimento 4 (Adicione mais aqui copiando e colando os do Google) -->
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Ótimo atendimento (do agendamento a consulta), uma ótima profissional, honesta, pediu raio-x completo (para avaliar todos os dentes, hj em dia os dentistas só avaliam o dente que vc reclama rs), super recomendo. Muito obrigada!"</p>
+        <div class="dep-who">
+          <div class="dep-avatar">J</div>
+          <div><strong>Karima Natasha</strong><span>Tratamento de canal</span></div>
+        </div>
+      </div>
+
+      <!-- Depoimento 5 -->
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Simplesmente maravilhosas! Atendimento com carinho, profissionalismo e confiança. Ainda em tratamento e já recomendo de todo coração! 💙🌟"</p>
+        <div class="dep-who">
+          <div class="dep-avatar">L</div>
+          <div><strong>Kelly Cristina</strong><span>Aparelho Ortodôntico</span></div>
+        </div>
+      </div>
+
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Atendimento perfeito 👏 <br>Procedimentos maravilhoso 👏🙌🏻☺️ <br>Só tenho a agradecer a toda a equipe"</p>
+        <div class="dep-who">
+          <div class="dep-avatar">L</div>
+          <div><strong>Rogério José</strong><span>Restauração</span></div>
+        </div>
+      </div>
+
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Atendimento humanizado, com todo cuidado e muito profissionalismo. Dra Solange e Dr Marcos sempre muito atenciosos e super empáticos. Melhor clínica que frequentei em toda a minha vida e super recomendo. Os atendimentos são realizados devidamente no horário agendado e os procedimentos sempre são detalhados e explicados de forma simples, objetiva e transparente! Ambiente sempre limpo  Grata por todo o atendimento."</p>
+        <div class="dep-who">
+          <div class="dep-avatar">L</div>
+          <div><strong>Vanessa Hilario</strong><span>Aparelho Ortodôntico</span></div>
+        </div>
+      </div>
+
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Fui muito bem atendida por toda a equipe do consultório, desde a recepção até as doutoras, que são impecáveis e extremamente educadas. Fiz um tratamento de canal e fiquei muito satisfeita com todo o procedimento. A atenção, o cuidado e a explicação detalhada sobre cada etapa me deixaram tranquila e segura. Recomendo muito!"</p>
+        <div class="dep-who">
+          <div class="dep-avatar">L</div>
+          <div><strong>Yasmin Pantaleão Lima</strong><span>Tratamento de Canal</span></div>
+        </div>
+      </div>
+
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Dra. Solange é a única dentista que não me deixa com medo dos procedimentos. Tive tantas experiências ruins na vida, mas com ela é tudo muito tranquilo. Além de ser uma profissional excelente, com preços e condições acessíveis, ainda consegue acalmar e tirar nossos traumas."</p>
+        <div class="dep-who">
+          <div class="dep-avatar">L</div>
+          <div><strong>Karoline Matias</strong><span>Extração</span></div>
+        </div>
+      </div>
+
+      <div class="dep-card">
+        <span class="stars">★★★★★</span>
+        <p class="quote">"Consultório maravilhoso, atendente super educada e simpática e a Doutora Solange uma profissional de excelência."</p>
+        <div class="dep-who">
+          <div class="dep-avatar">L</div>
+          <div><strong>Marcelo Dantas</strong><span>Restauração</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Controles do Carrossel (Bolinhas) -->
+    <div class="slider-controls reveal">
+      <div class="slider-dot active" onclick="changeSlide(0)"></div>
+      <div class="slider-dot" onclick="changeSlide(1)"></div>
+      <div class="slider-dot" onclick="changeSlide(2)"></div>
+      <div class="slider-dot" onclick="changeSlide(3)"></div>
+      <div class="slider-dot" onclick="changeSlide(4)"></div>
+      <div class="slider-dot" onclick="changeSlide(5)"></div>
+      <div class="slider-dot" onclick="changeSlide(6)"></div>
+      <div class="slider-dot" onclick="changeSlide(7)"></div>
+      <div class="slider-dot" onclick="changeSlide(8)"></div>
+      <div class="slider-dot" onclick="changeSlide(9)"></div>
     </div>
   </div>
 </section>
@@ -862,7 +1100,7 @@
         <h4>Especialidades</h4>
         <ul>
           <li><a href="#especialidades">Implantes dentários</a></li>
-          <li><a href="#especialidades">Clínica geral</a></li>
+          <li><a href="#especialidades">Prótese protocolo</a></li>
           <li><a href="#especialidades">Ortodontia</a></li>
           <li><a href="#especialidades">Tratamento de Canal</a></li>
         </ul>
@@ -896,6 +1134,7 @@
 </a>
 
 <script>
+  // Controle do Menu Mobile
   const header = document.getElementById('siteHeader');
   window.addEventListener('scroll', () => {
     header.classList.toggle('scrolled', window.scrollY > 30);
@@ -918,6 +1157,7 @@
     if(!open){ ul.style.flexDirection='column'; ul.style.gap='16px'; }
   });
 
+  // Animação de revelação de elementos na rolagem
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
@@ -925,6 +1165,36 @@
     });
   },{threshold:0.15});
   revealEls.forEach(el=>io.observe(el));
+
+  // Lógica do Carrossel de Depoimentos
+  const slides = document.querySelectorAll('.dep-card');
+  const dots = document.querySelectorAll('.slider-dot');
+  let currentSlide = 0;
+  let slideInterval;
+
+  function changeSlide(index) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+    
+    resetInterval();
+  }
+
+  function nextSlide() {
+    let next = (currentSlide + 1) % slides.length;
+    changeSlide(next);
+  }
+
+  function resetInterval() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 5000); // Passa a cada 5 segundos
+  }
+
+  // Iniciar o carrossel
+  resetInterval();
 </script>
 
 </body>
